@@ -1,0 +1,115 @@
+<project default="deploy">
+
+	<!-- JSP Diary build.xml -->
+
+	<!-- web.xml
+
+	<context-param><param-name>diaryPath</param-name><param-value>C:/Users/kumagai/Documents/Nefertiti の文書/Private/log</param-value></context-param>
+	<context-param><param-name>imagePath</param-name><param-value>C:/Users/kumagai/Pictures</param-value></context-param>
+	<context-param><param-name>RaamenyaList</param-name><param-value>なりたけ,かいざん,一代,青葉,町田家,金の糸,日高屋,トウマ,栄家</param-value></context-param>
+
+	-->
+
+	<property file="../../../../../build.properties" />
+
+	<condition property="have.tomcat">
+		<available file="${TOMCAT_SITE_HOME}" />
+	</condition>
+
+	<target name="zip" description="PDAによる持ち出し用">
+		<zip
+			destfile="${PDA_HOME}/Temp/JSPDiary.zip"
+			basedir=".."
+			includes="project/**"
+			excludes="project/bin/**"/>
+	</target>
+
+	<target name="codeguess">
+		<taskdef name="codeguess" classname="kumagai.codeguess.CodeGuessTask" classpath="${JAVAPROJECTCHECKER_LIB}" />
+		<codeguess targetfilepath="src/">
+			<exclude extension="java" code="UTF-8" />
+		</codeguess>
+		<codeguess targetfilepath="html/">
+			<exclude extension="jsp" code="UTF-8" />
+			<exclude extension="jpg" />
+		</codeguess>
+		<codeguess targetfilepath="html2/">
+			<exclude extension="jsp" code="UTF-8" />
+			<exclude extension="jpg" />
+		</codeguess>
+	</target>
+
+	<target name="javadoc">
+		<javadoc
+			destdir="../javadoc"
+			sourcepath="src"
+			encoding="utf-8"
+			classpath="${XALAN_LIB};${KTOOL_LIB};${JUNIT_LIB};${DIFF_LIB};${SERVLET_LIB};${STRUTS_LIB};${STRUTS2_CORE_LIB};${STRUTS2_CONVENTION_LIB}">
+		</javadoc>
+	</target>
+
+	<target name="deploy" if="have.tomcat">
+
+		<!-- Struts2 -->
+		<!-- <delete dir="${TOMCAT_SITE_HOME}/diary/" /> -->
+		<!-- <delete dir="${TOMCAT_SITE_HOME}/WEB-INF/classes/kumagai/diary/" /> -->
+		<copy todir="${TOMCAT_SITE_HOME}/diary/">
+			<fileset dir="html">
+				<include name="**/*.html" />
+				<include name="**/*.jsp" />
+				<include name="**/*.css" />
+				<include name="**/*.jpg" />
+			</fileset>
+		</copy>
+
+		<copy todir="${TOMCAT_SITE_HOME}/WEB-INF/classes">
+			<fileset dir="bin">
+				<include name="kumagai/diary/*.class" />
+				<include name="kumagai/diary/struts2/*.class" />
+				<exclude name="**/Category.class" />
+				<exclude name="**/Density.class" />
+				<exclude name="**/test/.class" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="jspcheck">
+		<taskdef name="jspcheck" classname="kumagai.jspchecker.JspCheckerTask" classpath="${JSPCHECKER_LIB}" />
+		<jspcheck actionClassPath="src/kumagai/diary/struts2" jspFilePath="html"/>
+	</target>
+
+	<target name="restart" depends="deploy">
+		<exec executable="sc">
+			<arg line="stop tomcat6" />
+		</exec>
+		<sleep seconds="1" />
+		<exec executable="sc">
+			<arg line="start tomcat6" />
+		</exec>
+	</target>
+
+	<target name="histo">
+		<java classname="kumagai.diary.FileSizeHistogramData" classpath="bin">
+			<arg value="${PDA_HOME}/Private/log"/>
+		</java>
+	</target>
+
+	<target name="diff">
+		<java classname="kumagai.diary.Diff" classpath="bin;${XALAN_LIB};${KTOOL_LIB};${DIFF_LIB}">
+			<arg value="${PDA_HOME}/Private/log/"/>
+			<arg value="C:/Backup/Nefertiti20130213.zip"/>
+			<arg value="${PDA_HOME}/Temp/"/>
+			<arg value="xxx"/>
+		</java>
+	</target>
+
+	<target name="dump">
+		<input addproperty="password"/>
+		<java classname="kumagai.diary.DiaryDocument" classpath="bin;${XALAN_LIB};${KTOOL_LIB};${DIFF_LIB}">
+			<arg value="${PDA_HOME}/Private/log/197607.xml"/>
+			<arg value=""/>
+			<arg value="${password}"/>
+		</java>
+	</target>
+
+</project>
