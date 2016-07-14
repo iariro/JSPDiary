@@ -112,12 +112,33 @@
 		</java>
 	</target>
 
+	<target name="decrypt">
+		<input addproperty="password"/>
+		<input addproperty="filename"/>
+		<java classname="kumagai.diary.Decrypt" classpath="bin;${XALAN_LIB};${KTOOL_LIB}">
+			<arg value="${password}"/>
+			<arg value="${PDA_HOME}/Private/log/${filename}.xml"/>
+			<arg value="${PDA_HOME}/Private/log/${filename}_plain.xml"/>
+		</java>
+	</target>
+
+	<target name="encrypt">
+		<input addproperty="password"/>
+		<input addproperty="filename"/>
+		<java classname="kumagai.diary.Encrypt" classpath="bin;${XALAN_LIB};${KTOOL_LIB}">
+			<arg value="${password}"/>
+			<arg value="${PDA_HOME}/Private/log/${filename}_plain.xml"/>
+			<arg value="${PDA_HOME}/Private/log/${filename}.xml"/>
+		</java>
+	</target>
+
 	<target name="importfromdayone">
 		<input addproperty="password"/>
 		<java classname="kumagai.diary.ImportFromDayOne" classpath="bin;${XALAN_LIB};${KTOOL_LIB}">
 			<arg value="../2016-06-30-Journal (1).txt"/>
 			<arg value=".."/>
 			<arg value="${password}"/>
+			<arg value="-l"/>
 		</java>
 	</target>
 

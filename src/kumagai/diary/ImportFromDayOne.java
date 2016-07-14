@@ -14,11 +14,13 @@ public class ImportFromDayOne
 		Pattern.compile("\tDate:\t([0-9]*)年([0-9]*)月([0-9]*)日 .*");
 	static private final Pattern topicHeaderPattern =
 		Pattern.compile("\t[A-Z][a-z]*:\t");
+	static private final Pattern locationPattern =
+		Pattern.compile("\tLocation:\t(.*)");
 	static private final Pattern photoPattern =
 		Pattern.compile("!\\[\\]\\(photos/(.*) \\\"\\\"\\)");
 
 	/**
-	 * @param args [0]=エクスポートテキストファイル [1]=出力先 [2]=パスワード
+	 * @param args [0]=エクスポートテキストファイル [1]=出力先 [2]=パスワード [3]=-lp:l=location/p=plain
 	 */
 	public static void main(String[] args)
 		throws Exception
@@ -36,9 +38,18 @@ public class ImportFromDayOne
 			String date2 = null;
 			String month = null;
 			String month2 = null;
+			String location = null;
+			boolean outLocation = false;
+			boolean crypt = true;
 			ArrayList<String> lines = null;
 			HashMap<String, DiaryDocument> documents =
 				new HashMap<String, DiaryDocument>();
+
+			if (args.length >= 4)
+			{
+				outLocation = args[3].indexOf('l') >= 0;
+				crypt = !(args[3].indexOf('p') >= 0);
+			}
 
 			while ((line = reader.readLine()) != null)
 			{
@@ -48,24 +59,27 @@ public class ImportFromDayOne
 				{
 					// ヘッダ行である。
 
-					matcher = datePattern.matcher(line);
+					Matcher dateMatcher = datePattern.matcher(line);
+					Matcher locationMatcher = locationPattern.matcher(line);
 
-					if (matcher.find())
+					if (dateMatcher.find())
 					{
 						// 日付行である。
+
+						location = null;
 
 						date =
 							String.format(
 								"%04d/%02d/%02d",
-								Integer.valueOf(matcher.group(1)),
-								Integer.valueOf(matcher.group(2)),
-								Integer.valueOf(matcher.group(3)));
+								Integer.valueOf(dateMatcher.group(1)),
+								Integer.valueOf(dateMatcher.group(2)),
+								Integer.valueOf(dateMatcher.group(3)));
 
 						month =
 							String.format(
 								"%04d%02d",
-								Integer.valueOf(matcher.group(1)),
-								Integer.valueOf(matcher.group(2)));
+								Integer.valueOf(dateMatcher.group(1)),
+								Integer.valueOf(dateMatcher.group(2)));
 
 						tag = null;
 
@@ -81,7 +95,7 @@ public class ImportFromDayOne
 						{
 							// 日の変わり目。
 
-							DiaryDocument document = documents.get(month);
+							DiaryDocument document = documents.get(month2);
 							document.setOneDay(date2, lines);
 						}
 
@@ -95,10 +109,18 @@ public class ImportFromDayOne
 						date2 = date;
 						month2 = month;
 					}
+					else if (locationMatcher.find())
+					{
+						// 位置行である。
+
+						location = locationMatcher.group(1);
+					}
 				}
 				else
 				{
 					// ヘッダ行ではない。
+
+					boolean tagLine = false;
 
 					if (line.length() > 0)
 					{
@@ -106,6 +128,7 @@ public class ImportFromDayOne
 						{
 							if (tag == null)
 							{
+								tagLine = true;
 								tag = line.substring(1);
 								line = "・" + tag;
 							}
@@ -127,6 +150,13 @@ public class ImportFromDayOne
 					if (date != null && tag != null)
 					{
 						lines.add(line);
+
+						if (outLocation && tagLine)
+						{
+							// 位置情報出力指定あり。
+
+							lines.add(location);
+						}
 					}
 				}
 			}
@@ -141,16 +171,20 @@ public class ImportFromDayOne
 			}
 			document.setOneDay(date, lines);
 
-			DesEncryptCipher desEncryptCipher =
-				new DesEncryptCipher(new DesKeyAndIVByMD5(args[2]));
-
 			for (Map.Entry<String, DiaryDocument> entry : documents.entrySet())
 			{
 				File outFilePath = new File(args[1], entry.getKey() + ".xml");
 
 				OutputStream stream =
-					desEncryptCipher.createOutputStream(
-						new FileOutputStream(outFilePath.getPath()));
+					new FileOutputStream(outFilePath.getPath());
+
+				if (crypt)
+				{
+					DesEncryptCipher desEncryptCipher =
+						new DesEncryptCipher(new DesKeyAndIVByMD5(args[2]));
+
+					stream = desEncryptCipher.createOutputStream(stream);
+				}
 
 				entry.getValue().write(new OutputStreamWriter(stream, "utf-8"));
 
@@ -158,6 +192,11 @@ public class ImportFromDayOne
 
 				System.out.printf("%s written.\n", outFilePath.getPath());
 			}
+		}
+		else
+		{
+			System.out.println("Usage:");
+			System.out.println("[0]=textfile [1]=out dir [2]=p [3]=-lp:l=location/p=plain");
 		}
 	}
 }
