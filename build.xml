@@ -134,11 +134,12 @@
 
 	<target name="importfromdayone">
 		<input addproperty="password"/>
+		<input addproperty="filename"/>
 		<java classname="kumagai.diary.ImportFromDayOne" classpath="bin;${XALAN_LIB};${KTOOL_LIB}">
-			<arg value="../2016-06-30-Journal (1).txt"/>
+			<arg value="../../../../../../Downloads/${filename}.zip"/>
 			<arg value=".."/>
 			<arg value="${password}"/>
-			<arg value="-l"/>
+			<arg value="-lt"/>
 		</java>
 	</target>
 
