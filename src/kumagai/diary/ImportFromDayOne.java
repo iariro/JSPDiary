@@ -253,22 +253,29 @@ public class ImportFromDayOne
 		{
 			File outFilePath = new File(outDirectory, entry.getKey() + ".xml");
 
-			OutputStream stream =
-				new FileOutputStream(outFilePath.getPath());
-
-			if (crypt)
+			try
 			{
-				DesEncryptCipher desEncryptCipher =
-					new DesEncryptCipher(new DesKeyAndIVByMD5(password));
+				OutputStream stream =
+					new FileOutputStream(outFilePath.getPath());
 
-				stream = desEncryptCipher.createOutputStream(stream);
+				if (crypt)
+				{
+					DesEncryptCipher desEncryptCipher =
+						new DesEncryptCipher(new DesKeyAndIVByMD5(password));
+
+					stream = desEncryptCipher.createOutputStream(stream);
+				}
+
+				entry.getValue().write(new OutputStreamWriter(stream, "utf-8"));
+
+				stream.close();
+
+				System.out.printf("%s written.\n", outFilePath.getPath());
 			}
-
-			entry.getValue().write(new OutputStreamWriter(stream, "utf-8"));
-
-			stream.close();
-
-			System.out.printf("%s written.\n", outFilePath.getPath());
+			catch (Exception exception)
+			{
+				System.out.printf("%s\n", exception.getMessage());
+			}
 		}
 	}
 }
