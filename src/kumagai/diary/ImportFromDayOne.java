@@ -200,7 +200,7 @@ public class ImportFromDayOne
 
 						line =
 							String.format(
-								"@image(\"%s\")",
+								"@image(%s)",
 								matcher.group(1));
 					}
 				}
