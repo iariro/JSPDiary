@@ -136,6 +136,11 @@ public class DiaryDocumentsFromDayOneJson
 			{
 				boolean tagLine = false;
 
+				if (line.indexOf(0x3099) >= 0)
+				{
+					System.out.printf("error:%s %s %s\n", date, tag, line);
+				}
+
 				if (line.length() > 0)
 				{
 					if (line.charAt(0) == '#')
