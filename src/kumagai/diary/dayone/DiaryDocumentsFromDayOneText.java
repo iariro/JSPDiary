@@ -32,6 +32,7 @@ public class DiaryDocumentsFromDayOneText
 		BufferedReader reader =
 			new BufferedReader(new InputStreamReader(stream, "utf-8"));
 
+		int topicCount = 0;
 		String tag = null;
 		String line;
 		String date = null;
@@ -74,6 +75,7 @@ public class DiaryDocumentsFromDayOneText
 
 					time = dateMatcher.group(4);
 					tag = null;
+					topicCount = 0;
 
 					if (! month.equals(month2))
 					{
@@ -118,12 +120,10 @@ public class DiaryDocumentsFromDayOneText
 				{
 					if (line.charAt(0) == '#')
 					{
-						if (tag == null)
-						{
-							tagLine = true;
-							tag = line.substring(1);
-							line = "・" + tag;
-						}
+						tagLine = true;
+						tag = line.substring(1);
+						line = "・" + tag;
+						topicCount++;
 					}
 
 					matcher = photoPattern.matcher(line);
@@ -132,28 +132,58 @@ public class DiaryDocumentsFromDayOneText
 					{
 						// 写真の行である。
 
-						line =
-							String.format(
-								"@image(%s)",
-								matcher.group(1));
+						line = String.format("@image(%s)", matcher.group(1));
 					}
 				}
 
 				if (date != null && tag != null)
 				{
+					// 日付とタグが確定している＝日記本文である。
+
 					lines.add(line);
 
-					if (outLocation && tagLine)
+					if (tagLine)
 					{
-						// 位置情報出力指定あり。
+						// タグ行
 
-						if (outTime)
+						if (outLocation)
 						{
-							lines.add(String.format("%s - %s", time, location));
-						}
-						else
-						{
-							lines.add(location);
+							// 位置情報出力指定あり。
+
+							if (outTime)
+							{
+								// 時刻出力指定あり。
+
+								if (topicCount == 1)
+								{
+									// １個目のトピック
+
+									lines.add(String.format("%s - %s", time, location));
+								}
+								else
+								{
+									// ２個目＝ヘッダなしで出現したトピック
+
+									lines.add("--:--:-- - 場所不明");
+								}
+							}
+							else
+							{
+								// 時刻出力指定なし。
+
+								if (topicCount == 1)
+								{
+									// １個目のトピック
+
+									lines.add(location);
+								}
+								else
+								{
+									// ２個目＝ヘッダなしで出現したトピック
+
+									lines.add("--:--:--");
+								}
+							}
 						}
 					}
 				}
