@@ -11,7 +11,7 @@
 	</head>
 
 	<body>
-		<h1>日記</h1>
+		日記<br>
 		<div class=hatena-body>
 		<div class=main>
 
@@ -22,19 +22,6 @@
 		<div class=hatena-body>
 		<div class=main>
 		<div class=day>
-
-		<table>
-			<tr>
-				<th>年</th>
-				<th>件</th>
-			</tr>
-			<s:iterator id="yearCount" value="yearCountCollection">
-				<tr>
-					<td><s:property value="year" />年</td>
-					<td><s:property value="count" />件</td>
-				</tr>
-			</s:iterator>
-		</table>
 
 		<table>
 			<tr>
