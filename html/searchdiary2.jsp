@@ -11,7 +11,7 @@
 	</head>
 
 	<body>
-		<h1>日記</h1>
+		日記<br>
 		<div class=hatena-body>
 		<div class=main>
 
