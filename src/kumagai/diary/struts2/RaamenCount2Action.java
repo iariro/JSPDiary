@@ -96,7 +96,7 @@ public class RaamenCount2Action
 				for (int j=0 ; j<raamenyaList.length ; j++)
 				{
 					ArrayList<SearchResultDay> results =
-						diaries.search("ラーメン", raamenyaList[j], true);
+						diaries.search("ラーメン", raamenyaList[j], true, true);
 
 					countCollection.add
 						(new MiseAndCount(raamenyaList[j], results.size()));
