@@ -95,7 +95,7 @@ public class SearchDiary2Action
 				return "error";
 			}
 
-			results = documents.search(category, phrase, topicOnly != null);
+			results = documents.search(category, phrase, digest != null, topicOnly != null);
 
 			int startYear = Integer.valueOf(this.startYear);
 			int endYear = Integer.valueOf(this.endYear);
