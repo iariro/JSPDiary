@@ -12,7 +12,7 @@
 	<body>
 
 		<div align="center">
-		<h1>日記検索</h1>
+		日記検索<br>
 		</div>
 
 		<div align="center">
@@ -70,7 +70,7 @@
 				<tr bgcolor="#eeeeff">
 				<td>オプション</td>
 				<td>
-				<input type="checkbox" name="useTag" value="on" checked>タグ使用<br>
+				<input type="hidden" name="useTag" value="on">タグ使用<br>
 				<input type="checkbox" name="digest">ダイジェスト表示<br>
 				<input type="checkbox" name="topicOnly" checked>該当トピックのみ絞り込み<br>
 				</td>
