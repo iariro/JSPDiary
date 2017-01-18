@@ -41,6 +41,7 @@ public class DiaryDocumentsFromDayOneText
 		String month = null;
 		String month2 = null;
 		String location = null;
+		String attributeLine = null;
 		ArrayList<String> lines = null;
 
 		while ((line = reader.readLine()) != null)
@@ -90,6 +91,13 @@ public class DiaryDocumentsFromDayOneText
 						// 日の変わり目。
 
 						DiaryDocument document = get(month2);
+						
+						if (attributeLine != null)
+						{
+							lines.add(attributeLine);
+							attributeLine = null;
+						}
+
 						document.setOneDay(date2, lines);
 					}
 
@@ -120,6 +128,14 @@ public class DiaryDocumentsFromDayOneText
 				{
 					if (line.charAt(0) == '#')
 					{
+						// タグの行である。
+						
+						if (attributeLine != null)
+						{
+							lines.add(attributeLine);
+							attributeLine = null;
+						}
+						
 						tagLine = true;
 						tag = line.substring(1);
 						line = "・" + tag;
@@ -158,13 +174,13 @@ public class DiaryDocumentsFromDayOneText
 								{
 									// １個目のトピック
 
-									lines.add(String.format("%s - %s", time, location));
+									attributeLine = String.format("%s - %s", time, location);
 								}
 								else
 								{
 									// ２個目＝ヘッダなしで出現したトピック
 
-									lines.add("--:--:-- - 場所不明");
+									attributeLine = "--:--:-- - 場所不明";
 								}
 							}
 							else
@@ -175,13 +191,13 @@ public class DiaryDocumentsFromDayOneText
 								{
 									// １個目のトピック
 
-									lines.add(location);
+									attributeLine = location;
 								}
 								else
 								{
 									// ２個目＝ヘッダなしで出現したトピック
 
-									lines.add("--:--:--");
+									attributeLine = "--:--:--";
 								}
 							}
 						}
@@ -197,6 +213,12 @@ public class DiaryDocumentsFromDayOneText
 			put(month, document);
 			document = get(month);
 		}
+		
+		if (attributeLine != null)
+		{
+			lines.add(attributeLine);
+		}
+
 		document.setOneDay(date, lines);
 	}
 }
