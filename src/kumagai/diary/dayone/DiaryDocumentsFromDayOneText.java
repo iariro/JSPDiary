@@ -205,20 +205,30 @@ public class DiaryDocumentsFromDayOneText
 				}
 			}
 		}
-
-		DiaryDocument document = get(month);
-		if (document == null)
-		{
-			document = new DiaryDocument();
-			put(month, document);
-			document = get(month);
-		}
 		
-		if (attributeLine != null)
+		if (month != null)
 		{
-			lines.add(attributeLine);
+			DiaryDocument document = get(month);
+			if (document == null)
+			{
+				document = new DiaryDocument();
+				put(month, document);
+				document = get(month);
+			}
+			
+			if (lines != null)
+			{
+				if (attributeLine != null)
+				{
+					lines.add(attributeLine);
+				}
+	
+				document.setOneDay(date, lines);
+			}
 		}
-
-		document.setOneDay(date, lines);
+		else
+		{
+			System.out.println("month is null");
+		}
 	}
 }

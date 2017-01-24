@@ -69,6 +69,7 @@ public class DiaryDocumentsFromDayOneJson
 		String month = null;
 		String month2 = null;
 		String location = null;
+		String attributeLine = null;
 		ArrayList<String> lines = null;
 
     	for (Entry entry : json.entries)
@@ -121,6 +122,13 @@ public class DiaryDocumentsFromDayOneJson
 				// 日の変わり目。
 
 				DiaryDocument document = get(month2);
+				
+				if (attributeLine != null)
+				{
+					lines.add(attributeLine);
+					attributeLine = null;
+				}
+				
 				document.setOneDay(date2, lines);
 			}
 
@@ -138,6 +146,8 @@ public class DiaryDocumentsFromDayOneJson
 
 				if (line.indexOf(0x3099) >= 0)
 				{
+					// 結合用濁点
+					
 					System.out.printf("error:%s %s %s\n", date, tag, line);
 				}
 
@@ -145,8 +155,16 @@ public class DiaryDocumentsFromDayOneJson
 				{
 					if (line.charAt(0) == '#')
 					{
+						// タグの行である。
+						
 						if (tag == null)
-						{
+						{							
+							if (attributeLine != null)
+							{
+								lines.add(attributeLine);
+								attributeLine = null;
+							}
+							
 							tagLine = true;
 							tag = line.substring(1);
 							line = "・" + tag;
@@ -159,10 +177,7 @@ public class DiaryDocumentsFromDayOneJson
 					{
 						// 写真の行である。
 
-						line =
-							String.format(
-								"@image(%s)",
-								matcher.group(1));
+						line = String.format("@image(%s)", matcher.group(1));
 					}
 				}
 
@@ -176,11 +191,11 @@ public class DiaryDocumentsFromDayOneJson
 
 						if (outTime)
 						{
-							lines.add(String.format("%s - %s", time, location));
+							attributeLine = String.format("%s - %s", time, location);
 						}
 						else
 						{
-							lines.add(location);
+							attributeLine = location;
 						}
 					}
 				}
@@ -197,6 +212,12 @@ public class DiaryDocumentsFromDayOneJson
 			put(month, document);
 			document = get(month);
 		}
+
+		if (attributeLine != null)
+		{
+			lines.add(attributeLine);
+		}
+
 		document.setOneDay(date, lines);
 	}
 }
