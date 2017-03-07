@@ -12,7 +12,7 @@ public class DiaryDocumentsFromDayOneText
 	extends HashMap<String, DiaryDocument>
 {
 	static private final Pattern datePattern =
-		Pattern.compile("\tDate:\t([0-9]*)年([0-9]*)月([0-9]*)日 ([0-9:]*) .*");
+		Pattern.compile("\tDate:\t\t*([0-9]*)年([0-9]*)月([0-9]*)日 ([0-9:]*) .*");
 	static private final Pattern topicHeaderPattern =
 		Pattern.compile("\t[A-Z][a-z]*:\t");
 	static private final Pattern locationPattern =
