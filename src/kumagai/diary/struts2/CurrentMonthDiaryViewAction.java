@@ -6,6 +6,7 @@ import javax.servlet.*;
 import com.sun.org.apache.xerces.internal.impl.io.*;
 import org.apache.struts2.*;
 import org.apache.struts2.convention.annotation.*;
+import org.xml.sax.*;
 import ktool.crypt.*;
 import ktool.datetime.*;
 import kumagai.diary.*;
@@ -105,16 +106,20 @@ public class CurrentMonthDiaryViewAction
 
 			return "success";
 		}
+		catch (SAXParseException exception)
+		{
+			this.message = String.format("ファイル%sが壊れています", filepath);
+			this.exception = exception;
+		}
 		catch (MalformedByteSequenceException exception)
 		{
 			this.message =
 				String.format(
 					"パスワードが違うかファイル%sが壊れています",
 					filepath);
-
 			this.exception = exception;
-
-			return "error";
 		}
+
+		return "error";
 	}
 }
