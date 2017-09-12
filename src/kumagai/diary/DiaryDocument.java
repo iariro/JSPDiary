@@ -1,19 +1,45 @@
 package kumagai.diary;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import java.util.regex.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.*;
-import javax.xml.transform.stream.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import com.sun.org.apache.xml.internal.serializer.*;
-import ktool.crypt.*;
-import ktool.datetime.*;
-import ktool.xml.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.Writer;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
+
+import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
+
+import ktool.crypt.DesDecryptCipher;
+import ktool.crypt.DesKeyAndIVByMD5;
+import ktool.datetime.DateTime;
+import ktool.xml.StructElement;
 
 /**
  * 日記ドキュメント。
@@ -390,6 +416,8 @@ public class DiaryDocument
 		String searchPhrase, boolean top, boolean topicOnly)
 		throws ParseException
 	{
+		Pattern categoryPattern = Pattern.compile(searchCategory);
+
 		ArrayList <SearchResultDay> ret = new ArrayList<SearchResultDay>();
 
 		StructElement [] days =
@@ -417,7 +445,7 @@ public class DiaryDocument
 
 					if (searchCategory == null ||
 						searchCategory.length()==0 ||
-						category.equals(searchCategory))
+						categoryPattern.matcher(category).find())
 					{
 						// カテゴリは一致するまたはカテゴリ無指定。
 
@@ -462,7 +490,7 @@ public class DiaryDocument
 				if (foundDay ||
 					(searchCategory == null ||
 					searchCategory.length()==0 ||
-					category.equals(searchCategory)))
+					categoryPattern.matcher(category).find()))
 				{
 					// カテゴリは一致するまたはカテゴリ無指定。
 

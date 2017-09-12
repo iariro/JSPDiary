@@ -1,8 +1,13 @@
 package kumagai.diary.junit;
 
-import java.text.*;
-import java.util.*;
-import junit.framework.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.regex.Pattern;
+
+import junit.framework.Assert;
+import junit.framework.TestCase;
 import ktool.datetime.DateTime;
 
 public class EtcTest
@@ -37,5 +42,11 @@ public class EtcTest
 	{
 		DateTime date = new DateTime("2012/03/04 00:00:00");
 		System.out.println(date);
+	}
+
+	public void testPattern()
+	{
+		Pattern categoryPattern = Pattern.compile("..鑑賞");
+		Assert.assertTrue(categoryPattern.matcher("xxx鑑賞").find());
 	}
 }
