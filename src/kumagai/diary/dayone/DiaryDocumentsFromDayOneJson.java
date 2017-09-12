@@ -1,10 +1,17 @@
 package kumagai.diary.dayone;
 
-import java.io.*;
-import java.util.*;
-import java.util.regex.*;
-import net.arnx.jsonic.*;
-import kumagai.diary.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import kumagai.diary.DiaryDocument;
+import net.arnx.jsonic.JSON;
 
 /**
  * JSON形式のエクスポートファイルから生成可能な日記ドキュメントのコレクション
@@ -28,7 +35,7 @@ public class DiaryDocumentsFromDayOneJson
 		DayOneJson json = JSON.decode(stream, DayOneJson.class);
 		stream.close();
 
-		for (Entry entry : json.entries)
+		for (kumagai.diary.dayone.Entry entry : json.entries)
 		{
 			for (String tag : entry.tags)
 			{
@@ -72,7 +79,7 @@ public class DiaryDocumentsFromDayOneJson
 		String attributeLine = null;
 		ArrayList<String> lines = null;
 
-    	for (Entry entry : json.entries)
+    	for (kumagai.diary.dayone.Entry entry : json.entries)
     	{
 	        if (outTime)
 	        {

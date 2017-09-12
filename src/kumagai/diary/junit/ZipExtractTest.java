@@ -1,8 +1,11 @@
 package kumagai.diary.junit;
 
-import java.io.*;
-import java.util.zip.*;
-import junit.framework.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+import junit.framework.TestCase;
 
 public class ZipExtractTest
 	extends TestCase
@@ -52,6 +55,7 @@ public class ZipExtractTest
 				}
 				zipIn.closeEntry();
 			}
+			zipIn.close();
 		}
 		catch (Exception e)
 		{

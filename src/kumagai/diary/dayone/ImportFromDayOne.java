@@ -1,10 +1,19 @@
 package kumagai.diary.dayone;
 
-import java.io.*;
-import java.util.*;
-import java.util.zip.*;
-import ktool.crypt.*;
-import kumagai.diary.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+import ktool.crypt.DesEncryptCipher;
+import ktool.crypt.DesKeyAndIVByMD5;
+import kumagai.diary.DiaryDocument;
 
 /**
  * DayOneのテキスト形式のエクスポートファイルをインポート。
@@ -94,6 +103,7 @@ public class ImportFromDayOne
 	 * @param password パスワード
 	 * @param crypt true=暗号化する
 	 */
+	@SuppressWarnings("resource")
 	static private void writeXmlFiles(HashMap<String, DiaryDocument> documents,
 		String outDirectory, String password, boolean crypt)
 		throws Exception

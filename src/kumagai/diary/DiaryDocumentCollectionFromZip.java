@@ -1,8 +1,12 @@
 package kumagai.diary;
 
-import java.util.*;
-import java.util.zip.*;
-import ktool.crypt.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import ktool.crypt.DesDecryptCipher;
+import ktool.crypt.DesKeyAndIVByMD5;
 
 /**
  * PDA同期対象ファイルZIPから構築可能な日記ドキュメントコレクション。
@@ -120,5 +124,6 @@ public class DiaryDocumentCollectionFromZip
 			{
 			}
 		}
+		zip.close();
 	}
 }
