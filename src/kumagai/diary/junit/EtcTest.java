@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 import ktool.datetime.DateTime;
 
@@ -22,7 +21,7 @@ public class EtcTest
 
 	public void test1()
 	{
-		Assert.assertEquals("ラーメン", "・ラーメン".substring(1));
+		assertEquals("ラーメン", "・ラーメン".substring(1));
 	}
 
 	public void test2()
@@ -47,6 +46,6 @@ public class EtcTest
 	public void testPattern()
 	{
 		Pattern categoryPattern = Pattern.compile("..鑑賞");
-		Assert.assertTrue(categoryPattern.matcher("xxx鑑賞").find());
+		assertTrue(categoryPattern.matcher("xxx鑑賞").find());
 	}
 }
