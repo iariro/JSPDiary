@@ -1,7 +1,7 @@
 package kumagai.diary;
 
-import java.text.*;
-import java.util.*;
+import java.text.ParseException;
+import java.util.ArrayList;
 
 /**
  * 日記ドキュメントコレクション基底部。
@@ -29,7 +29,7 @@ public class DiaryDocumentCollection
 	 * カテゴリー，フレーズを指定しての検索。１行目のみ対象指定付き。
 	 * @param category カテゴリー
 	 * @param phrase フレーズ
-	 * @param top true=１行目のみ対象／false=制限なし
+	 * @param top true=1-2行目のみ対象／false=制限なし
 	 * @param topicOnly true=トピックのみ絞り込む／false=日全体を対象にする
 	 * @return 検索結果コレクション
 	 * @throws ParseException

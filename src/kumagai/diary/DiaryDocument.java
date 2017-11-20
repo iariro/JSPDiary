@@ -407,7 +407,7 @@ public class DiaryDocument
 	 * 検索。１行目のみ対象指定付き。
 	 * @param searchCategory カテゴリー
 	 * @param searchPhrase フレーズ
-	 * @param top true=１行目のみ対象／false=制限なし
+	 * @param top true=1-2行目のみ対象／false=制限なし
 	 * @param topicOnly true=トピックのみ絞り込む／false=日全体を対象にする
 	 * @return 検索結果コレクション
 	 * @throws ParseException
@@ -457,7 +457,7 @@ public class DiaryDocument
 							StructElement [] lines =
 								topics[j].getChildElements();
 
-							for (int k=0 ; k<lines.length && (!top || k<=0) ; k++)
+							for (int k=0 ; k<lines.length && (!top || k<=1) ; k++)
 							{
 								String line = lines[k].getContent();
 
@@ -500,7 +500,7 @@ public class DiaryDocument
 
 					StructElement [] lines = topics[j].getChildElements();
 
-					for (int k=0 ; k<lines.length && (!top || k<=0) ; k++)
+					for (int k=0 ; k<lines.length && (!top || k<=1) ; k++)
 					{
 						String line = lines[k].getContent();
 
@@ -609,7 +609,7 @@ public class DiaryDocument
 						}
 					}
 
-					dayResult.add( new SearchResult(category, linesString));
+					dayResult.add(new SearchResult(category, linesString));
 				}
 			}
 
