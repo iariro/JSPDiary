@@ -538,6 +538,14 @@ public class DiaryDocument
 
 						line = effect(line);
 
+						// 「 - null」削除。元データに存在しなければ不要な処理。
+						if ((k == lines.length - 1) && line.endsWith(" - null"))
+						{
+							// 最後の行
+
+							line = line.substring(0, line.length() - 7);
+						}
+
 						if (tab)
 						{
 							// タブの中である。

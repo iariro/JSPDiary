@@ -1,9 +1,14 @@
 package kumagai.diary.dayone;
 
-import java.io.*;
-import java.util.*;
-import java.util.regex.*;
-import kumagai.diary.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import kumagai.diary.DiaryDocument;
 
 /**
  * テキスト形式のエクスポートファイルから生成可能な日記ドキュメントのコレクション
@@ -174,7 +179,18 @@ public class DiaryDocumentsFromDayOneText
 								{
 									// １個目のトピック
 
-									attributeLine = String.format("%s - %s", time, location);
+									if (location != null)
+									{
+										// 位置情報あり
+
+										attributeLine = String.format("%s - %s", time, location);
+									}
+									else
+									{
+										// 位置情報なし
+
+										attributeLine = time;
+									}
 								}
 								else
 								{
