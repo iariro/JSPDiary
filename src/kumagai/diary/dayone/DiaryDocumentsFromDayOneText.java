@@ -142,7 +142,14 @@ public class DiaryDocumentsFromDayOneText
 						}
 						
 						tagLine = true;
-						tag = line.substring(1);
+						if (line.startsWith("# #"))
+						{
+							tag = line.substring(3);
+						}
+						else
+						{
+							tag = line.substring(1);
+						}
 						line = "・" + tag;
 						topicCount++;
 					}
