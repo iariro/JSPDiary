@@ -23,7 +23,7 @@ public class DiaryDocumentsFromDayOneText
 	static private final Pattern locationPattern =
 		Pattern.compile("\tLocation:\t(.*)");
 	static private final Pattern photoPattern =
-		Pattern.compile("!\\[\\]\\(photos/(.*) \\\"\\\"\\)");
+		Pattern.compile("!\\[\\]\\(photos/([^\\)]*)\\)");
 
 	/**
 	 * テキスト形式のエクスポートファイルから日記ドキュメントのコレクションを生成
