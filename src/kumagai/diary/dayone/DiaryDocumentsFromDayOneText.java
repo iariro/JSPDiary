@@ -48,6 +48,7 @@ public class DiaryDocumentsFromDayOneText
 		String location = null;
 		String attributeLine = null;
 		ArrayList<String> lines = null;
+		Boolean tagLine2 = null;
 
 		while ((line = reader.readLine()) != null)
 		{
@@ -168,7 +169,13 @@ public class DiaryDocumentsFromDayOneText
 				{
 					// 日付とタグが確定している＝日記本文である。
 
-					lines.add(line);
+					if (!tagLine2 || (line.length() > 0))
+					{
+						// 前の行はタグ行ではないor空行ではない
+						// ＝タグ行の次の空行を無視する
+
+						lines.add(line);
+					}
 
 					if (tagLine)
 					{
@@ -226,6 +233,8 @@ public class DiaryDocumentsFromDayOneText
 						}
 					}
 				}
+
+				tagLine2 = tagLine;
 			}
 		}
 		
