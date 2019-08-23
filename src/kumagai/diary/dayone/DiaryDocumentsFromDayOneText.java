@@ -23,7 +23,7 @@ public class DiaryDocumentsFromDayOneText
 	static private final Pattern locationPattern =
 		Pattern.compile("\tLocation:\t(.*)");
 	static private final Pattern photoPattern =
-		Pattern.compile("!\\[\\]\\(photos/([^\\)]*)\\)");
+		Pattern.compile("(.*)!\\[\\]\\(photos/([^\\)]*)\\)(.*)");
 
 	/**
 	 * テキスト形式のエクスポートファイルから日記ドキュメントのコレクションを生成
@@ -155,13 +155,22 @@ public class DiaryDocumentsFromDayOneText
 						topicCount++;
 					}
 
-					matcher = photoPattern.matcher(line);
-
-					if (matcher.find())
+					while (true)
 					{
-						// 写真の行である。
+						matcher = photoPattern.matcher(line);
 
-						line = String.format("@image(%s)", matcher.group(1));
+						if (matcher.find())
+						{
+							// 写真エントリを含む。
+
+							line = String.format("%s @image(%s) %s", matcher.group(1), matcher.group(2), matcher.group(3));
+						}
+						else
+						{
+							// 写真エントリを含まない。
+
+							break;
+						}
 					}
 				}
 
