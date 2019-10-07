@@ -23,7 +23,7 @@ public class DiaryDocumentsFromDayOneText
 	static private final Pattern locationPattern =
 		Pattern.compile("\tLocation:\t(.*)");
 	static private final Pattern photoPattern =
-		Pattern.compile("(.*)!\\[\\]\\(photos/([^\\)]*)\\)(.*)");
+			Pattern.compile("!\\[\\]\\(photos/([^\\)]*)\\)");
 
 	/**
 	 * テキスト形式のエクスポートファイルから日記ドキュメントのコレクションを生成
@@ -128,122 +128,149 @@ public class DiaryDocumentsFromDayOneText
 			{
 				// ヘッダ行ではない。
 
-				boolean tagLine = false;
-
-				if (line.length() > 0)
+				ArrayList<String> lines2 = new ArrayList<String>();
+				matcher = photoPattern.matcher(line);
+				boolean find;
+				if (find = matcher.find())
 				{
-					if (line.charAt(0) == '#')
+					// 写真エントリを含む。
+
+					int start;
+					int end = 0;
+					while (find)
 					{
-						// タグの行である。
-						
-						if (attributeLine != null)
+						start = matcher.start();
+						String g1 = line.substring(end, start);
+						String g2 = matcher.group();
+						end = matcher.end();
+						if (!g1.isEmpty())
 						{
-							lines.add(attributeLine);
-							attributeLine = null;
+							lines2.add(g1);
 						}
-						
-						tagLine = true;
-						if (line.startsWith("# #"))
+						lines2.add(g2);
+						find = matcher.find();
+						if (!find)
 						{
-							tag = line.substring(3);
+							lines2.add(line.substring(end));
 						}
-						else
-						{
-							tag = line.substring(1);
-						}
-						line = "・" + tag;
-						topicCount++;
 					}
+				}
+				else
+				{
+					// 写真エントリを含まない。
 
-					while (true)
+					lines2.add(line);
+				}
+
+				for (String line2 : lines2)
+				{
+					boolean tagLine = false;
+
+					if (line2.length() > 0)
 					{
-						matcher = photoPattern.matcher(line);
+						if (line2.charAt(0) == '#')
+						{
+							// タグの行である。
+						
+							if (attributeLine != null)
+							{
+								lines.add(attributeLine);
+								attributeLine = null;
+							}
+						
+							tagLine = true;
+							if (line2.startsWith("# #"))
+							{
+								tag = line2.substring(3);
+							}
+							else
+							{
+								tag = line2.substring(1);
+							}
+							line2 = "・" + tag;
+							topicCount++;
+						}
 
+						matcher = photoPattern.matcher(line2);
 						if (matcher.find())
 						{
 							// 写真エントリを含む。
 
-							line = String.format("%s @image(%s) %s", matcher.group(1), matcher.group(2), matcher.group(3));
-						}
-						else
-						{
-							// 写真エントリを含まない。
-
-							break;
+							line2 = String.format("@image(%s)", matcher.group(1));
 						}
 					}
-				}
 
-				if (date != null && tag != null)
-				{
-					// 日付とタグが確定している＝日記本文である。
-
-					if (!tagLine2 || (line.length() > 0))
+					if (date != null && tag != null)
 					{
-						// 前の行はタグ行ではないor空行ではない
-						// ＝タグ行の次の空行を無視する
+						// 日付とタグが確定している＝日記本文である。
 
-						lines.add(line);
-					}
-
-					if (tagLine)
-					{
-						// タグ行
-
-						if (outLocation)
+						if (!tagLine2 || (line2.length() > 0))
 						{
-							// 位置情報出力指定あり。
+							// 前の行はタグ行ではないor空行ではない
+							// ＝タグ行の次の空行を無視する
 
-							if (outTime)
+							lines.add(line2);
+						}
+
+						if (tagLine)
+						{
+							// タグ行
+
+							if (outLocation)
 							{
-								// 時刻出力指定あり。
+								// 位置情報出力指定あり。
 
-								if (topicCount == 1)
+								if (outTime)
 								{
-									// １個目のトピック
+									// 時刻出力指定あり。
 
-									if (location != null)
+									if (topicCount == 1)
 									{
-										// 位置情報あり
+										// １個目のトピック
 
-										attributeLine = String.format("%s - %s", time, location);
+										if (location != null)
+										{
+											// 位置情報あり
+
+											attributeLine = String.format("%s - %s", time, location);
+										}
+										else
+										{
+											// 位置情報なし
+
+											attributeLine = time;
+										}
 									}
 									else
 									{
-										// 位置情報なし
+										// ２個目＝ヘッダなしで出現したトピック
 
-										attributeLine = time;
+										attributeLine = "--:--:-- - 場所不明";
 									}
 								}
 								else
 								{
-									// ２個目＝ヘッダなしで出現したトピック
+									// 時刻出力指定なし。
 
-									attributeLine = "--:--:-- - 場所不明";
-								}
-							}
-							else
-							{
-								// 時刻出力指定なし。
+									if (topicCount == 1)
+									{
+										// １個目のトピック
 
-								if (topicCount == 1)
-								{
-									// １個目のトピック
+										attributeLine = location;
+									}
+									else
+									{
+										// ２個目＝ヘッダなしで出現したトピック
 
-									attributeLine = location;
-								}
-								else
-								{
-									// ２個目＝ヘッダなしで出現したトピック
-
-									attributeLine = "--:--:--";
+										attributeLine = "--:--:--";
+									}
 								}
 							}
 						}
 					}
-				}
 
-				tagLine2 = tagLine;
+					tagLine2 = tagLine;
+				}
 			}
 		}
 		
