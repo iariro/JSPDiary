@@ -1,6 +1,6 @@
 package kumagai.diary;
 
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * 月毎の件数情報。
@@ -9,6 +9,7 @@ public class MonthlyCountTable
 	extends ArrayList<MonthlyCountTableRow>
 {
 	public int [] monthlySum = new int [12];
+	public int total = 0;
 
 	/**
 	 * 月毎の件数情報を構築。
@@ -28,6 +29,7 @@ public class MonthlyCountTable
 			{
 				monthCount.setCount(j + 1, monthlyCount.get(i + j));
 				monthlySum[j] += monthlyCount.get(i + j);
+				total += monthlyCount.get(i + j);
 			}
 
 			year++;

@@ -17,7 +17,7 @@
 
 		分類：<s:property value="category" /><br>
 		フレーズ：<s:property value="phrase" /><br>
-		件数：<s:property value="size" /><br>
+		件数：<s:property value="monthlyCountTable.total" /><br>
 
 		<div class=hatena-body>
 		<div class=main>
@@ -49,7 +49,7 @@
 				<s:iterator value="monthlyCountTable.monthlySum">
 					<th><s:property /></th>
 				</s:iterator>
-				<th><s:property value="size" /></th>
+				<th><s:property value="monthlyCountTable.total" /></th>
 			</tr>
 		</table>
 

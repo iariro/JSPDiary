@@ -1,9 +1,16 @@
 package kumagai.diary;
 
-import java.io.*;
-import java.util.*;
-import sun.misc.*;
-import ktool.crypt.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import ktool.crypt.DesDecryptCipher;
+import ktool.crypt.DesKeyAndIVByMD5;
+import sun.misc.BASE64Decoder;
 
 /**
  * 月ごとのカウント配列。
@@ -141,7 +148,7 @@ public class MonthlyCount
 				(calendar.get(Calendar.YEAR) - startYear) * 12 +
 				calendar.get(Calendar.MONTH);
 
-			set(month, get(month) + 1);
+			set(month, get(month) + data.get(i).size());
 		}
 	}
 }

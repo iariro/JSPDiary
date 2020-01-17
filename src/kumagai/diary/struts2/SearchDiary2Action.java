@@ -1,12 +1,25 @@
 package kumagai.diary.struts2;
 
-import java.io.*;
-import java.util.*;
-import javax.servlet.*;
-import com.sun.org.apache.xerces.internal.impl.io.*;
-import org.apache.struts2.*;
-import org.apache.struts2.convention.annotation.*;
-import kumagai.diary.*;
+import java.io.File;
+import java.util.ArrayList;
+
+import javax.servlet.ServletContext;
+
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+
+import com.sun.org.apache.xerces.internal.impl.io.MalformedByteSequenceException;
+
+import kumagai.diary.DateRange;
+import kumagai.diary.DiaryDocumentCollection;
+import kumagai.diary.DiaryDocumentCollectionFromDirectory;
+import kumagai.diary.DiaryDocumentCollectionFromZip;
+import kumagai.diary.MonthlyCount;
+import kumagai.diary.MonthlyCountTable;
+import kumagai.diary.SearchResultDay;
 
 /**
  * 日記検索アクション。
@@ -35,15 +48,6 @@ public class SearchDiary2Action
 	public MonthlyCountTable monthlyCountTable;
 	public Exception exception;
 	public String message;
-
-	/**
-	 * 結果件数取得。
-	 * @return 結果件数
-	 */
-	public int getSize()
-	{
-		return results.size();
-	}
 
 	/**
 	 * 日記検索アクション。
