@@ -160,7 +160,7 @@ public class DiaryDocumentsFromDayOneJson
 
 				if (line.length() > 0)
 				{
-					if (line.charAt(0) == '#')
+					if (line.startsWith("# #"))
 					{
 						// タグの行である。
 						
@@ -173,7 +173,7 @@ public class DiaryDocumentsFromDayOneJson
 							}
 							
 							tagLine = true;
-							tag = line.substring(1);
+							tag = line.substring(3);
 							line = "・" + tag;
 						}
 					}
