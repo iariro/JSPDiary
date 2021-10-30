@@ -31,7 +31,7 @@ public class DiaryDocumentsFromDayOneJson
 	public static void main(String[] args)
 		throws IOException
 	{
-		FileInputStream stream = new FileInputStream("C:/Users/w81515sr/Downloads/繧ｷ繧吶Ε繝ｼ繝翫Ν.json");
+		FileInputStream stream = new FileInputStream("C:/Users/kumagai/Dropbox/private2021-10-29-Journal.json");
 		DayOneJson json = JSON.decode(stream, DayOneJson.class);
 		stream.close();
 
@@ -67,7 +67,7 @@ public class DiaryDocumentsFromDayOneJson
 	public DiaryDocumentsFromDayOneJson(InputStream stream, boolean outLocation, boolean outTime)
 		throws Exception
 	{
-        DayOneJson json = JSON.decode(stream, DayOneJson.class);
+		DayOneJson json = JSON.decode(stream, DayOneJson.class);
 
 		String tag = null;
 		String date = null;
@@ -79,17 +79,17 @@ public class DiaryDocumentsFromDayOneJson
 		String attributeLine = null;
 		ArrayList<String> lines = null;
 
-    	for (kumagai.diary.dayone.Entry entry : json.entries)
-    	{
-	        if (outTime)
-	        {
+		for (kumagai.diary.dayone.Entry entry : json.entries)
+		{
+			if (outTime)
+			{
 		        date = entry.creationDate;
-	        }
+			}
 
-	        if (outLocation && entry.location != null)
-	        {
-		        location = entry.location.toString();
-	        }
+			if (outLocation && entry.location != null)
+			{
+				location = entry.location.toString();
+			}
 
 			BufferedReader reader = new BufferedReader(new StringReader(entry.text));
 
@@ -129,13 +129,13 @@ public class DiaryDocumentsFromDayOneJson
 				// 日の変わり目。
 
 				DiaryDocument document = get(month2);
-				
+
 				if (attributeLine != null)
 				{
 					lines.add(attributeLine);
 					attributeLine = null;
 				}
-				
+
 				document.setOneDay(date2, lines);
 			}
 
@@ -154,26 +154,33 @@ public class DiaryDocumentsFromDayOneJson
 				if (line.indexOf(0x3099) >= 0)
 				{
 					// 結合用濁点
-					
+
 					System.out.printf("error:%s %s %s\n", date, tag, line);
 				}
 
 				if (line.length() > 0)
 				{
-					if (line.startsWith("# #"))
+					if (line.startsWith("#"))
 					{
 						// タグの行である。
-						
+
 						if (tag == null)
-						{							
+						{
 							if (attributeLine != null)
 							{
 								lines.add(attributeLine);
 								attributeLine = null;
 							}
-							
+
 							tagLine = true;
-							tag = line.substring(3);
+							if (line.startsWith("# #"))
+							{
+								tag = line.substring(3);
+							}
+							else
+							{
+								tag = line.substring(1);
+							}
 							line = "・" + tag;
 						}
 					}
