@@ -132,12 +132,12 @@
 		</java>
 	</target>
 
-	<target name="importfromdayone">
+	<target name="importfromdropbox">
 		<input addproperty="password"/>
 		<input addproperty="filename"/>
-		<java classname="kumagai.diary.ImportFromDayOne" classpath="bin;${XALAN_LIB};${KTOOL_LIB}">
-			<arg value="../../../../../../Downloads/${filename}.zip"/>
-			<arg value=".."/>
+		<java classname="kumagai.diary.dayone.ImportFromDayOne" classpath="bin;${XALAN_LIB};${KTOOL_LIB};${JSONIC_LIB}">
+			<arg value="../../../../../../Dropbox/private/${filename}.zip"/>
+			<arg value="../../../../FUSIONGOL/private/data/log"/>
 			<arg value="${password}"/>
 			<arg value="-lt"/>
 		</java>
