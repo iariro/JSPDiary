@@ -186,6 +186,8 @@ public class DiaryDocumentsFromDayOneJson
 
 						line = String.format("@image(%s)", matcher.group(1));
 					}
+
+					line = line.replace("\\-", "-");
 				}
 
 				if (date != null && tag != null)
