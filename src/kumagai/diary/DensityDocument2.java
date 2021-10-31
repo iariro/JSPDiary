@@ -1,11 +1,17 @@
 package kumagai.diary;
 
-import java.awt.*;
-import java.util.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import org.w3c.dom.*;
-import ktool.xml.*;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.util.Calendar;
+import java.util.HashMap;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerConfigurationException;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+
+import ktool.xml.KDocument;
 
 /**
  * 日ごとの日記の分量をSVG形式でグラフ化。
@@ -35,7 +41,7 @@ public class DensityDocument2
 	static
 	{
 		rectSize = new Dimension(2, 15);
-		origin = new Point(50, 20);
+		origin = new Point(75, 20);
 	}
 
 	/**
@@ -92,13 +98,13 @@ public class DensityDocument2
 
 			element.setAttribute(
 				"x",
-				String.valueOf(origin.x - 40));
+				String.valueOf(origin.x - 65));
 			element.setAttribute(
 				"y",
 				String.valueOf(origin.y + 12 + rectSize.height * i));
 			element.setAttribute("font-family", fontFamily);
 			element.appendChild
-				(createTextNode(String.valueOf(startYear + i)));
+				(createTextNode(String.format("%d年", startYear + i)));
 
 			top.appendChild(element);
 		}
