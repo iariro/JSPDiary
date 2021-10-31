@@ -50,6 +50,21 @@ public class SearchDiary2Action
 	public String message;
 
 	/**
+	 * 検索件数取得
+	 * @return 検索件数
+	 * @throws Exception
+	 */
+	public int getSize()
+	{
+		int size = 0;
+		for (SearchResultDay searchResultDay : results)
+		{
+			size += searchResultDay.size();
+		}
+		return size;
+	}
+
+	/**
 	 * 日記検索アクション。
 	 * @return 処理結果
 	 * @throws Exception
