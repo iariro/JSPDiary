@@ -50,43 +50,68 @@ public class ImportFromDayOne
 				return;
 			}
 
-			ZipInputStream zipStream = new ZipInputStream(fileStream);
-
-			ZipEntry entry;
-			while ((entry = zipStream.getNextEntry()) != null)
+			if (args[0].endsWith("zip"))
 			{
-				if (! entry.isDirectory())
+				ZipInputStream zipStream = new ZipInputStream(fileStream);
+
+				ZipEntry entry;
+				while ((entry = zipStream.getNextEntry()) != null)
 				{
-					String relativePath = entry.getName();
-
-					if (! relativePath.contains("/"))
+					if (! entry.isDirectory())
 					{
-						// トップの階層＝テキストファイルとみなす
+						String relativePath = entry.getName();
 
-						System.out.printf("DayOne Text : %s\n", relativePath);
-
-						HashMap<String, DiaryDocument> documents;
-
-						if (relativePath.endsWith("txt"))
+						if (! relativePath.contains("/"))
 						{
-							documents =
-								new DiaryDocumentsFromDayOneText
-									(zipStream, outLocation, outTime);
+							// トップの階層＝テキストファイルとみなす
 
-							writeXmlFiles(documents, args[1], args[2], crypt);
-						}
-						else if (relativePath.endsWith("json"))
-						{
-							documents =
-								new DiaryDocumentsFromDayOneJson
-									(zipStream, outLocation, outTime);
+							System.out.printf("DayOne Text : %s\n", relativePath);
 
-							writeXmlFiles(documents, args[1], args[2], crypt);
+							HashMap<String, DiaryDocument> documents;
+
+							if (relativePath.endsWith("txt"))
+							{
+								documents =
+									new DiaryDocumentsFromDayOneText
+										(zipStream, outLocation, outTime);
+
+								writeXmlFiles(documents, args[1], args[2], crypt);
+							}
+							else if (relativePath.endsWith("json"))
+							{
+								documents =
+									new DiaryDocumentsFromDayOneJson
+										(zipStream, outLocation, outTime);
+
+								writeXmlFiles(documents, args[1], args[2], crypt);
+							}
 						}
 					}
+					zipStream.closeEntry();
 				}
-				zipStream.closeEntry();
 			}
+			else
+			{
+				HashMap<String, DiaryDocument> documents;
+
+				if (args[0].endsWith("txt"))
+				{
+					documents =
+						new DiaryDocumentsFromDayOneText
+							(fileStream, outLocation, outTime);
+
+					writeXmlFiles(documents, args[1], args[2], crypt);
+				}
+				else if (args[0].endsWith("json"))
+				{
+					documents =
+						new DiaryDocumentsFromDayOneJson
+							(fileStream, outLocation, outTime);
+
+					writeXmlFiles(documents, args[1], args[2], crypt);
+				}
+			}
+
 			fileStream.close();
 		}
 		else
