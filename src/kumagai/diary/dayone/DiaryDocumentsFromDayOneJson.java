@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -99,20 +102,29 @@ public class DiaryDocumentsFromDayOneJson
 			{
 				// 日付行である。
 
+				Instant creationDate = Instant.parse(entry.creationDate);
+				ZonedDateTime creationDateJp = ZonedDateTime.ofInstant(creationDate, ZoneId.of("Asia/Tokyo"));
+
 				date =
 					String.format(
 						"%04d/%02d/%02d",
-						Integer.valueOf(dateMatcher.group(1)),
-						Integer.valueOf(dateMatcher.group(2)),
-						Integer.valueOf(dateMatcher.group(3)));
+						creationDateJp.getYear(),
+						creationDateJp.getMonthValue(),
+						creationDateJp.getDayOfMonth());
 
 				month =
 					String.format(
 						"%04d%02d",
-						Integer.valueOf(dateMatcher.group(1)),
-						Integer.valueOf(dateMatcher.group(2)));
+						creationDateJp.getYear(),
+						creationDateJp.getMonthValue());
 
-				time = dateMatcher.group(4);
+				time =
+					String.format(
+					"%02d:%02d:%02d",
+					creationDateJp.getHour(),
+					creationDateJp.getMinute(),
+					creationDateJp.getSecond());
+
 				tag = null;
 			}
 
