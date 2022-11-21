@@ -1,9 +1,9 @@
 package kumagai.diary.dayone;
 
-import java.util.*;
+import java.util.ArrayList;
 
 /**
- * JSONƒgƒbƒv—v‘f
+ * JSONãƒ‡ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚ºåž‹
  */
 public class DayOneJson
 {
@@ -12,7 +12,7 @@ public class DayOneJson
 }
 
 /**
- * metadataƒIƒuƒWƒFƒNƒg
+ * metadataãƒ‡ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚ºåž‹
  */
 class Metadata
 {
@@ -28,7 +28,7 @@ class Metadata
 }
 
 /**
- * entries”z—ñ‚Ì—v‘f
+ * entriesãƒ‡ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚ºåž‹
  */
 class Entry
 {
@@ -39,7 +39,7 @@ class Entry
 }
 
 /**
- * locationƒIƒuƒWƒFƒNƒg
+ * locationãƒ‡ã‚·ãƒªã‚¢ãƒ©ã‚¤ã‚ºåž‹
  */
 class Location
 {
@@ -53,6 +53,13 @@ class Location
 	 */
 	public String toString()
 	{
-		return String.format("%s %s %s", administrativeArea, localityName, placeName);
+	    if (administrativeArea == null &&
+	        localityName == null &&
+	        placeName == null)
+	    {
+	        return "";
+	    }
+
+	    return String.format("%s %s %s", administrativeArea, localityName, placeName);
 	}
 }
